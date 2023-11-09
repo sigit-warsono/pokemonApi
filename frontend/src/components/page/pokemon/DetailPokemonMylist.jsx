@@ -6,7 +6,7 @@ import { PokemonContext } from "../../../contexts/PokemonContext";
 import CountUp from "react-countup";
 import { IoArrowBackSharp } from "react-icons/io5";
 
-const DetailPokemon = () => {
+const DetailPokemonMylist = () => {
   const navigate = useNavigate();
   const { getPokemonByID } = useContext(PokemonContext);
   const { id } = useParams();
@@ -31,7 +31,7 @@ const DetailPokemon = () => {
       <Navbar />
       <div className="flex w-full justify-center mt-32">
         <div className="flex w-[90%]">
-        <IoArrowBackSharp className="text-[3rem] text-slate-300 cursor-pointer" onClick={()=> navigate("/")}/>
+        <IoArrowBackSharp className="text-[3rem] text-slate-300 cursor-pointer" onClick={()=> navigate("/my-list-pokemon")}/>
         </div>
           </div>
       {loading ? (
@@ -133,4 +133,5 @@ const DetailPokemon = () => {
   );
 };
 
-export default DetailPokemon;
+export default DetailPokemonMylist;
+ 

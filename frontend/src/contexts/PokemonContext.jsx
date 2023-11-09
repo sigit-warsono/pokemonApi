@@ -5,12 +5,11 @@ import { UserContext } from "./UserContext";
 const PokemonContext = createContext();
 
 const PokemonProvider = ({ children }) => {
-  const [allPokemons, setAllPokemons] = useState([]);
   const [globalPokemons, setGlobalPokemons] = useState([]);
-  const [offset, setOffset] = useState(0);
+  const [dataPokemons, setDataPokemons] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const Swal = require("sweetalert2");
-  const [openDot, setOpenDot] = useState(false);
   const { idUser } = useContext(UserContext);
   const [myPokemon, setMyPokemon] = useState([]);
   const [page, setPage] = useState(0);
@@ -19,12 +18,9 @@ const PokemonProvider = ({ children }) => {
   const [rows, setRows] = useState(0);
   const [keyword, setKeyword] = useState("");
   const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
 
-  //ßßconsole.log(idUser);
 
-  useEffect(() => {
-    getAllPokemons();
-  }, [offset]);
 
   useEffect(() => {
     getGlobalPokemons();
@@ -34,22 +30,24 @@ const PokemonProvider = ({ children }) => {
     getMyListPokemon();
   }, [idUser, page, keyword]);
 
-  const getAllPokemons = async (limit = 20) => {
-    const res = await fetch(
-      `${process.env.REACT_APP_BASE_URL_API}pokemon?limit=${limit}&offset=${offset}`
-    );
-    const data = await res.json();
+  
 
-    const promises = data.results.map(async (pokemon) => {
-      const res = await fetch(pokemon.url);
-      const data = await res.json();
-      return data;
-    });
-    const results = await Promise.all(promises);
+  const resultPokemon = globalPokemons.filter((data)=>{
+    return data.name.includes(search);
+  });
 
-    setAllPokemons([...allPokemons, ...results]);
-    setLoading(false);
-  };
+  const totalRows = resultPokemon.length;
+  const totalPerPage = totalRows / 25;
+  const perPage = Math.ceil(totalPerPage);
+  const totalCurrentPage = currentPage + 1;
+  const limitPage = (totalRows * totalCurrentPage) / perPage;
+  const offsetPage =(25 * totalCurrentPage) - 25;
+
+
+
+  useEffect(()=>{
+    setDataPokemons(resultPokemon.slice(offsetPage, limitPage))
+  },[search, limitPage, offsetPage]);
 
   const getGlobalPokemons = async () => {
     try {
@@ -70,12 +68,8 @@ const PokemonProvider = ({ children }) => {
     }
   };
 
-  const onClickLoadMore = () => {
-    setOpenDot(true);
-    setTimeout(() => {
-      setOpenDot(false);
-      setOffset(offset + 20);
-    }, 3400);
+  const onClickLoadMore = ({ selected : selectedPage }) => {
+    setCurrentPage(selectedPage)
   };
 
   const getPokemonByID = async (id) => {
@@ -94,12 +88,13 @@ const PokemonProvider = ({ children }) => {
         idPokemon: id,
         idUser: idUs,
         name: data.name,
-        image: data.sprites.other.dream_world.front_default,
+        image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`,
       });
       Swal.fire({
         title: "Success",
         text: "Add list my pokemon",
         icon: "success",
+        confirmButtonColor: "#FFFF00",
         timer: 1000,
       });
     } catch (error) {
@@ -122,7 +117,6 @@ const PokemonProvider = ({ children }) => {
       setPages(response.data.totalPage);
       setRows(response.data.totalRows);
 
-      // console.log(response)
     } catch (error) {
       console.log(error.message);
     }
@@ -134,16 +128,29 @@ const PokemonProvider = ({ children }) => {
     setKeyword(query);
   };
 
+  const deletePokeMylist = async (id)=>{
+    try {
+      await axios.delete(`http://localhost:8080/delete-my-list-pokemon/${id}`);
+      getMyListPokemon();
+      Swal.fire({
+        title: "Remove success",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <PokemonContext.Provider
       value={{
-        allPokemons,
         globalPokemons,
         onClickLoadMore,
         loading,
         getPokemonByID,
         submitPokemonList,
-        openDot,
         myPokemon,
         pages,
         changePage,
@@ -151,6 +158,11 @@ const PokemonProvider = ({ children }) => {
         searchDataMyPoke,
         query,
         setQuery,
+        dataPokemons,
+        search,
+        setSearch,
+        perPage,
+        deletePokeMylist
       }}
     >
       {children}

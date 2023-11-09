@@ -51,3 +51,18 @@ export const MyLiskPokemon =async(req, res)=>{
         totalPage: totalPage
     });
 }
+
+export const Remove = async(req, res) => {
+    console.log(req.params.id)
+    try {
+        await Pokemon.destroy({
+            where:{
+                id: req.params.id
+            }
+        })
+        res.status(200).json({msg: "Success"});
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}

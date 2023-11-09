@@ -7,8 +7,9 @@ import { PiListDashesFill } from 'react-icons/pi';
 
 
 const MyListPokemon = () => {
-  const { myPokemon, changePage, pages, rows, searchDataMyPoke, query, setQuery } =
+  const { myPokemon, changePage, pages, rows, searchDataMyPoke, query, setQuery, deletePokeMylist } =
     useContext(PokemonContext);
+    console.log(pages)
   const navigate = useNavigate();
   return (
     <div className="flex flex-col">
@@ -24,7 +25,7 @@ const MyListPokemon = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <button className="p-[0.6rem] bg-blue-500 text-white text-[0.9rem]">
+            <button className="p-[0.6rem] bg-yellow-300 text-black text-[0.9rem]">
               Search
             </button>
           </form>
@@ -32,7 +33,7 @@ const MyListPokemon = () => {
         <table class="w-[80%] table-fixed border-collapse border border-slate-400">
           <thead>
             <tr>
-              <th className="border border-slate-300 w-[7rem]">No.</th>
+              <th className="border border-slate-300 w-[7rem]">Id Pokemon</th>
               <th className="border border-slate-300">Image</th>
               <th className="border border-slate-300">Name</th>
               <th className="border border-slate-300">Information</th>
@@ -45,7 +46,7 @@ const MyListPokemon = () => {
             myPokemon.map((poke, index) => (
               <tr key={poke.id}>
                 <td className="border border-slate-300 text-center">
-                  {index + 1}
+                  {poke.idPokemon}
                 </td>
                 <td className="border text-center flex justify-center">
                   <img src={poke.image} alt="" className="w-[5rem] h-[5rem]" />
@@ -57,10 +58,19 @@ const MyListPokemon = () => {
                   <button
                     className="p-2 bg-yellow-300 text-[#514F4E] text-[0.8rem] rounded-[1rem] cursor-pointer"
                     onClick={() =>
-                      navigate(`/pokemon-detail/${poke.idPokemon}`)
+                      navigate(`/pokemon-detail-my-list/${poke.idPokemon}`)
                     }
                   >
                     More Detail
+                  </button>
+                  &nbsp;
+                  <button
+                    className="p-2 bg-red-300 text-[#514F4E] text-[0.8rem] rounded-[1rem] cursor-pointer"
+                    onClick={() =>
+                      deletePokeMylist(poke.id)
+                    }
+                  >
+                    Remove
                   </button>
                 </td>
               </tr>

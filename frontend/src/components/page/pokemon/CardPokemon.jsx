@@ -26,7 +26,8 @@ const CardPokemon = ({ pokemon, submitPokemonList, idUser }) => {
       )}
 
       <img
-        src={pokemon.sprites.other.dream_world.front_default}
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`}
+       // src={pokemon.sprites.other.dream_world.front_default}
         alt=""
         className="w-[5rem] h-[5rem]"
       />

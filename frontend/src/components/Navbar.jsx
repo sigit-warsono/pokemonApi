@@ -10,7 +10,8 @@ const Navbar = () => {
   const { Logout, name, idUser } = useContext(UserContext);
 
   return (
-    <div className="flex w-full justify-around bg-[#e6eaec] p-4 mb-20 fixed z-10">
+    // bg-[#e6eaec]
+    <div className="flex w-full justify-around bg-yellow-200 p-4 mb-20 fixed z-20">
       <img
         src={LogoPoke}
         alt=""
@@ -41,7 +42,7 @@ const Navbar = () => {
         </div>
       ) : (
         <div
-          className="flex items-center gap-1 cursor-pointer"
+          className="flex items-center gap-1 cursor-pointer z-20"
           onClick={() => navigate("/login")}
         >
           <span>
