@@ -30,7 +30,8 @@ const PokemonProvider = ({ children }) => {
     getMyListPokemon();
   }, [idUser, page, keyword]);
 
-  
+
+
 
   const resultPokemon = globalPokemons.filter((data)=>{
     return data.name.includes(search);
@@ -43,10 +44,14 @@ const PokemonProvider = ({ children }) => {
   const limitPage = (totalRows * totalCurrentPage) / perPage;
   const offsetPage =(25 * totalCurrentPage) - 25;
 
+  
+  
 
 
   useEffect(()=>{
+
     setDataPokemons(resultPokemon.slice(offsetPage, limitPage))
+
   },[search, limitPage, offsetPage]);
 
   const getGlobalPokemons = async () => {
@@ -162,7 +167,7 @@ const PokemonProvider = ({ children }) => {
         search,
         setSearch,
         perPage,
-        deletePokeMylist
+        deletePokeMylist,
       }}
     >
       {children}

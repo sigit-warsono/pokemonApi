@@ -42,7 +42,7 @@ const Navbar = () => {
         </div>
       ) : (
         <div
-          className="flex items-center gap-1 cursor-pointer z-20"
+          className="flex items-center gap-1 cursor-pointer z-20 border border-yellow-500 p-3 rounded-[1rem] hover:bg-yellow-500 hover:text-white"
           onClick={() => navigate("/login")}
         >
           <span>
